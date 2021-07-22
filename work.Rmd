@@ -346,3 +346,252 @@ no_limpiar <- "df"
 rm(list = setdiff(ls(), no_limpiar));graphics.off();globalenv();cat("\014")
 ```
 
+
+# Análisis de datos
+
+Obtenemos una tabla con la inversión de cada medio en cada año, descartando 2015 y 2019, (dado que no están completos).
+
+```{r}
+df_inversiones <- df %>% 
+  mutate(anio = year(mes)) %>% 
+  filter(anio !=2015 & anio !=2019) %>% 
+  group_by(anio) %>% 
+  summarise(rrss_inversion = sum(rrss_inversion),
+            sem_inversion = sum(sem_inversion),
+            tv_inversion = sum(tv_inversion)) 
+```
+
+```{r echo=FALSE}
+# Función Reactable bar char ----
+# Estilo para la barra de porcentaje
+
+bar_chart <- function(label, width = "100%", height = "14px", fill = "#00bfc4", background = NULL) {
+  bar <- div(style = list(background = fill, width = width, height = height))
+  chart <- div(style = list(flexGrow = 1, marginLeft = "6px", background = background), bar)
+  div(style = list(display = "flex", alignItems = "center"), label, chart)
+}
+
+mi_tabla <- reactable(
+  df_inversiones, # Mis datos
+  pagination = T,
+  fullWidth = T, # Tabla estrecha
+  compact = TRUE, # Para estrecha los margenes laterales
+  class = "followers-tbl",
+  
+  defaultColDef = colDef(
+    headerStyle = list(
+      left = 0, fontSize = 12,
+      background = "#f0f0f0"
+    ), 
+    align = "left"
+  ),
+  
+  
+  # Listado de columnas
+  columns = list(
+   
+  # Columna 1
+    anio = colDef(
+      name = "Año",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+    
+   # Columna 2
+    rrss_inversion = colDef(
+      name = "RRSS Inversión",
+      defaultSortOrder = "desc",
+      align = "left",
+    # barra
+      cell = function(value) {
+        width <- paste0(value * 100 / max(df_inversiones$rrss_inversion), "%")
+        value <- format(value, big.mark = ".")
+        value <- format(value, width = 9, justify = "left")
+        bar_chart(value, width = width, fill = "#3fc1c9", background = "#e1e1e1")
+      },
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+   
+    # Columna 3
+    sem_inversion = colDef(
+      name = "SEM Inversión",
+      align = "left",
+    # barra
+      cell = function(value) {
+        width <- paste0(value * 100 / max(df_inversiones$sem_inversion), "%")
+        value <- format(value, big.mark = ".")
+        value <- format(value, width = 9, justify = "left")
+        bar_chart(value, width = width, fill = "#fc5185", background = "#e1e1e1")
+      },
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+   
+    # Columna 4
+    tv_inversion = colDef(
+      name = "TV Inversión",
+      align = "left",
+    # barra
+      cell = function(value) {
+        width <- paste0(value * 100 / max(df_inversiones$tv_inversion), "%")
+        value <- format(value, big.mark = ".")
+        value <- format(value, width = 9, justify = "left")
+        bar_chart(value, width = width, fill = "#fbc047", background = "#e1e1e1")
+      },
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    )
+
+)
+)
+
+
+# Añadir titulo, subtitulo y centrado
+htmltools::div(
+  class = ".contenido_tabla",
+  htmltools::div(
+    class = "header",
+    htmltools::div(class = "title", "Inversión en medios"),
+    paste0("RRSS | SEM | TV")
+  ),
+  mi_tabla
+)
+
+```
+
+Construimos una tabla que muestre la venta media de cada mes, descartando también 2015 y 2019.
+
+```{r}
+df_ventas <- df %>% 
+  mutate(meses = month(mes, label = T, abbr = F)) %>% 
+  mutate(anio = year(mes)) %>% 
+  filter(anio !=2015 & anio !=2019) %>% 
+  group_by(anio, meses) %>% 
+  summarise(media_ventas = mean(sales))
+```
+
+```{r echo=FALSE}
+mi_tabla <- reactable(
+  df_ventas %>% 
+  mutate_if(is.numeric, as.integer), # Mis datos
+  pagination = T,
+  fullWidth = T, # Tabla estrecha
+  compact = TRUE, # Para estrecha los margenes laterales
+  class = "followers-tbl",
+  defaultColDef = colDef(
+    headerStyle = list(
+      left = 0, fontSize = 12,
+      background = "#f0f0f0"
+    )
+    , align = "left"
+  ),
+  
+  
+  # Listado de columnas
+  columns = list(
+   
+  # Columna 1
+    anio = colDef(
+      name = "Año",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+    
+    # Columna 2
+    meses = colDef(
+      name = "Meses",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+    
+   # Columna 3
+    media_ventas = colDef(
+      name = "Media Ventas",
+      defaultSortOrder = "desc",
+      align = "left",
+    # barra
+      cell = function(value) {
+        width <- paste0(value * 100 / max(df_ventas$media_ventas), "%")
+        value <- format(value, big.mark = ".")
+        value <- format(value, width = 9, justify = "left")
+        bar_chart(value, width = width, fill = "#3fc1c9", background = "#e1e1e1")
+      },
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    )
+   
+
+)
+)
+
+
+# Añadir titulo, subtitulo y centrado
+htmltools::div(
+  class = ".contenido_tabla",
+  htmltools::div(
+    class = "header",
+    htmltools::div(class = "title", "Venta media de cada mes"),
+    paste0("2016 | 2017 | 2018")
+  ),
+  mi_tabla
+)
+
+```
+
+
+Visualizamos la serie por meses de cada año para ver si existe estacionalidad.
+
+```{r}
+plotly::plot_ly(data =  df_ventas , 
+        x = ~meses, y = ~ media_ventas, 
+        type="scatter", 
+        mode='lines',
+        name = ~anio,
+        line = list(color = c('#048EE8','#000FFF','#FFF000'), 
+                    width = 2)) %>% 
+plotly::layout(title = 'Ventas por meses y por años')
+```
+
+Hemos separado la serie de ventas por cada año para ver mejor la estacionalidad de las ventas. Y como claramente el mes de Junio hay un gran descenso en las ventas, mientras que los meses invernales son los que registran mayores ventas.
+
+# Correlación de cada variable de medios con la venta
+
+```{r}
+df_correlacion <- df %>% 
+  select(!1) %>% 
+  cor() %>% 
+  as.data.frame() %>% 
+  dplyr::slice(3:3) %>% 
+  round(2)
+```
+
+
+```{r echo=FALSE}
+mi_tabla <- reactable(
+  df_correlacion, # Mis datos
+  pagination = T,
+  fullWidth = T, # Tabla estrecha
+  compact = TRUE, # Para estrecha los margenes laterales
+  class = "followers-tbl",
+  defaultColDef = colDef(
+    headerStyle = list(
+      left = 0, fontSize = 12,
+      background = "#f0f0f0"
+    )
+    , align = "left"
+  )
+)
+
+
+# Añadir titulo, subtitulo y centrado
+htmltools::div(
+  class = ".contenido_tabla",
+  htmltools::div(
+    class = "header",
+    htmltools::div(class = "title", "Correlación Ventas"),
+    paste0("rrss impresiones | rrss inversion | sem clicks | sem inversion | tv inversion")
+  ),
+  mi_tabla
+)
+
+```
+
+Claramente la variable inversión TV es la que mayor correlación guarda guarda con las ventas
+
