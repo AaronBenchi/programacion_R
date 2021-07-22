@@ -46,3 +46,40 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 
 ![](mi_disen%CC%83o/Logo_AA.png){style="position:absolute;top:0px;right:0px;" width="108"}
 
+## Cargar librerías, funciones, datos {.tabset}
+
+Con esta línea de código cargamos todas las librerías, funciones y datos necesarios para esta práctica.
+
+### Cargar función
+
+```{r}
+source("funciones.R")
+```
+
+### Ver función
+
+```{r results="hide"}
+# Función para cargar e instalar librerías
+cargar_librerias <- function(librerias) {
+  sapply(librerias, function(lib) {
+    
+    # Cargar la librería, y si no existe instalar y cargar.
+    if(!require(lib, character.only = TRUE)) {
+      
+      # Instalar paquete
+      install.packages(lib)
+      
+      # Cargar librería
+      library(lib, character.only = TRUE)
+    }
+  })}
+
+librerias <- c(
+  'data.table',
+  'tidyverse',
+  'lubridate',
+  'reactable')
+
+cargar_librerias(librerias)
+```
+
