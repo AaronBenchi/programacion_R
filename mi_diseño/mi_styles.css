@@ -1,0 +1,186 @@
+/*Contenedor central */
+.main-container {
+  max-width: 1800px;
+  margin-left: 4% !important;   /*auto, 100% */
+  margin-right: auto;
+}
+
+/*lista desplegable elementos globales*/
+/*sin estar situados sobre ellos*/
+.list-group-item{
+    background-color: #FFFFFF;
+    color: #000000;
+    border-color: #000000;
+}
+/*situados sobre ellos se pone azul con letra blanca*/
+.list-group-item.active{
+    background-color: #0084cf;
+    color: #FFFFFF;
+    border-color: #0084cf;
+}
+
+/* Raton encima texto negro fondo gris*/
+.list-group-item.active:hover{
+    background-color: #babfc2;
+    color: #000000;
+    border-color: #babfc2;
+}
+
+ /*.list-group-item.active:focus,  */
+
+input[type="number"] {
+  max-width: 80%;
+}
+
+div.outer {
+  position: fixed;
+  top: 56px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* Customize fonts */
+body, label, input, button, select { 
+  font-family: 'Helvetica Neue', Helvetica;
+  font-weight: 200;
+
+  
+}
+
+  /* 
+como estaba antes 
+h1, h2, h3, h4 { 
+  font-weight: 400;
+}
+
+  */
+h2, h3, h4 { 
+   color: #3893c7;
+}
+
+h1 { 
+   color: #0084cf;
+}
+
+
+#controls {
+  /* Appearance */
+  background-color: white;
+  padding: 0 10px 10px 10px;
+  cursor: move;
+  /* Fade out while not hovering */
+  opacity: 0.55;
+  zoom: 0.9;
+  transition: opacity 500ms 1s;
+}
+
+  /* 
+
+#TOC {
+  color: purple; 
+}
+
+
+
+  */
+  
+  
+
+#controls:hover {
+  /* Fade in while hovering */
+  opacity: 0.75;
+  transition-delay: 0;
+}
+
+#logo {
+  /* Appearance */
+  background-color: transparent;
+  cursor: move;
+  /* Fade out while not hovering */
+  opacity: 0.25;
+  zoom: 0.9;
+  transition: opacity 500ms 1s;
+}
+
+#logo:hover {
+  /* Fade in while hovering */
+  opacity: 0.95;
+  transition-delay: 0;
+}
+
+/*---------- CSS PARA MIS TABLAS CON REACTABLE*------------/
+/* CSS for the R Markdown document, inserted through a ```{css} code chunk */
+
+/* Styles for the table container, title, and subtitle y centrado*/
+
+.contenido_tabla {
+  /* Center the table */
+  margin: 0 auto;
+  /* Reduce the table width */
+  width: 50%;
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.contenido_tabla_ancho_completo {
+  /* Center the table */
+  margin: 0 auto;
+  /* Reduce the table width */
+  width: 100%;
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.header {
+  margin: 8px 0;
+  font-size: 18px;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Styles for the table */
+.followers-tbl {
+  font-size: 14px;
+  line-height: 18px;
+}
+
+.followers-tbl a {
+  color: inherit;
+}
+
+/* Styles for the column headers */
+.header {
+  border-bottom: 2px solid #555;
+  font-size: 13px;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.header:hover {
+  background-color: #eee;
+}
+
+/* Styles for the bar charts */
+.bar-cell {
+  display: flex;
+  align-items: center;
+}
+
+.number {
+  font-family: "Fira Mono", Consolas, Monaco, monospace;
+  font-size: 13.5px;
+  white-space: pre;
+}
+
+.bar-chart {
+  flex-grow: 1;
+  margin-left: 6px;
+  height: 14px;
+}
+
+.bar {
+  height: 100%;
+}
