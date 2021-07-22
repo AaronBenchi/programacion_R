@@ -136,3 +136,43 @@ no_limpiar <- c(paste0("df_", nombre_tablas),'lista_de_tablas', 'fun_na_df', 'fu
 rm(list = setdiff(ls(), no_limpiar));graphics.off();globalenv();cat("\014")
 ```
 
+## Tratamiento NAs {.tabset}
+
+Verificaremos que dataframes tienen NAs y los imputaremos a la media, y de nuevo limpiamos el entorno.
+
+### Cargar función
+
+```{r warning =FALSE, error = FALSE, message = FALSE}
+# Comprobamos los dataframe con NA ----
+dataframes_NA <- fun_na_lista(lista_de_tablas)
+dataframes_NA
+```
+
+```{r warning =FALSE, error = FALSE, message = FALSE, results = "hide"}
+# Imputar los NA a la media en el dataframe df_PF_tv
+df_PF_tv <- df_PF_tv %>% replace_na( list(
+    tv_inversion = mean(na.omit(df_PF_tv$tv_inversion)) # imputar a la media
+  ))
+
+# Limpiar entorno ----
+no_limpiar <- c("df_PF_rrss", "df_PF_sales", "df_PF_sem", "df_PF_tv")
+rm(list = setdiff(ls(), no_limpiar));graphics.off();globalenv();cat("\014")
+```
+
+### Ver función
+
+```{r}
+# Funciones para localizar NA en dataframe y en lista
+
+# Función encontrar Na en dataframe 
+fun_na_df <- function(dataframe){
+  sapply(dataframe, function(x) sum(is.na(dataframe)))
+}
+
+# Función encontrar Na en lista de dataframes
+fun_na_lista <- function(lista_df){
+  lista_df_NA <- lapply( X = lista_df , FUN = fun_na_df )
+  return(lista_df_NA)
+}
+```
+

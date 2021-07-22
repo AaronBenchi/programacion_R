@@ -45,3 +45,18 @@ fun_leer_archivos <- function(carpeta_datos){
   lista_de_tablas <<- magrittr::set_names(lista_de_tablas, nombre_tablas)
   
 }
+
+# Funciones para localizar NA en dataframe y en lista ----
+
+# Función encontrar Na en dataframe 
+fun_na_df <- function(dataframe){
+  sapply(dataframe, function(x) sum(is.na(dataframe)))
+}
+
+# Función encontrar Na en lista de dataframes
+fun_na_lista <- function(lista_df){
+  lista_df_NA <- lapply( X = lista_df , FUN = fun_na_df )
+  return(lista_df_NA)
+}
+
+
