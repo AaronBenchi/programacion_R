@@ -176,3 +176,173 @@ fun_na_lista <- function(lista_df){
 }
 ```
 
+# Unión de dataframes
+
+Uniremos los cuatro dataframes en un mismo dataframe, usando granularidad mensual y nos quedamos únicamente con el periodo de fechas coincidente.
+
+## Tratamiento de variables para los 4 dataframes
+
+1.  Damos formato a las fechas
+
+2.  Ordenamos las fechas
+
+3.  Pasamos de semenas a meses, agrupamos por meses el **df_PF_rrss** y **df_PF_sem**
+
+```{r}
+df_PF_rrss <- df_PF_rrss %>% 
+  mutate(semana = as.Date(semana, format="%d/%m/%Y")) %>% 
+  arrange(semana) %>% 
+  mutate(mes = floor_date(semana, unit='month')) %>% 
+  group_by(mes) %>%
+  summarise(rrss_impresiones = sum(rrss_impresiones), 
+            rrss_inversion = sum(rrss_inversion))
+
+df_PF_sales <- df_PF_sales %>% 
+  mutate(mes = as.Date(mes, format="%d/%m/%Y")) %>% 
+  arrange(mes) 
+
+df_PF_sem <- df_PF_sem %>% 
+  mutate(semana = as.Date(semana, format="%d/%m/%Y")) %>% 
+  arrange(semana) %>% 
+  mutate(mes = floor_date(semana, unit='month')) %>% 
+  group_by(mes) %>%
+  summarise(sem_clicks = sum(sem_clicks), 
+            sem_inversion = sum(sem_inversion))
+
+df_PF_tv <- df_PF_tv %>% 
+  mutate(mes = as.Date(mes, format="%d/%m/%Y")) %>% 
+  arrange(mes)
+```
+
+## Comprobamos fechas de los dataframes
+
+```{r}
+# Comprobamos el rango de fechas de los dataframes
+data.frame(
+  dataframe = c("df_PF_rrss", "df_PF_sales", "df_PF_sem", "df_PF_tv"),
+  fecha_minima = c(min(df_PF_rrss$mes),
+                   min(df_PF_sales$mes),
+                   min(df_PF_sem$mes),
+                   min(df_PF_tv$mes)),
+  fecha_máxima = c(max(df_PF_rrss$mes),
+                   max(df_PF_sales$mes),
+                   max(df_PF_sem$mes),
+                   max(df_PF_tv$mes))
+) %>% reactable()
+```
+
+## Unimos todos los dataframes
+
+```{r}
+df <- df_PF_rrss %>% 
+  inner_join(df_PF_sales, by = "mes") %>% 
+  inner_join(df_PF_sem, by = "mes") %>% 
+  inner_join(df_PF_tv, by = "mes")
+```
+
+El resultado lo podemos ver en esta tabla **interactiva**:
+
+```{r echo=FALSE}
+
+mi_tabla <- reactable(
+  df %>% 
+  mutate_if(is.numeric, as.integer), # Mis datos
+  pagination = T,
+  fullWidth = T, # Tabla estrecha
+  compact = TRUE, # Para estrecha los margenes laterales
+  class = "followers-tbl",
+  
+  defaultColDef = colDef(
+    headerStyle = list(
+      left = 0, fontSize = 12,
+      background = "#f0f0f0"
+    )
+    , align = "left"
+  ),
+  
+  
+  # Listado de columnas
+  columns = list(
+   
+  # Columna 1
+    mes = colDef(
+      name = "Mes",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+    
+   # Columna 2
+    rrss_impresiones = colDef(
+      name = "RRSS Impresiones",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+   
+   # Columna 3
+    rrss_inversion = colDef(
+      name = "RRSS Inversión",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+   
+   # Columna 4
+    sales = colDef(
+      name = "Ventas",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+   
+   # Columna 5
+    sem_clicks = colDef(
+      name = "Clicks SEM",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+   
+   # Columna 6
+    sem_inversion = colDef(
+      name = "SEM Inversión",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    ),
+   
+   # Columna 7
+    tv_inversion = colDef(
+      name = "TV Inversión",
+      align = "left",
+      style = list(fontFamily = "monospace", whiteSpace = "pre")
+    )
+   
+   
+
+)
+)
+
+
+# Añadir titulo, subtitulo y centrado
+htmltools::div(
+  class = ".contenido_tabla_ancho_completo",
+  htmltools::div(
+    class = "header",
+    htmltools::div(class = "title", "Tabla interactiva de medios"),
+    paste0("Impresiones | Ventas | Clicks")
+  ),
+  mi_tabla
+)
+
+```
+
+## Comprobamos las fechas en el nuevo df
+
+```{r warning =FALSE, error = FALSE, message = FALSE, results = "hide"}
+data.frame(
+  dataframe = "df",
+  fecha_minima = min(df$mes),
+  fecha_máxima = max(df$mes)
+) %>% reactable()
+
+# Limpiar entorno ----
+no_limpiar <- "df"
+rm(list = setdiff(ls(), no_limpiar));graphics.off();globalenv();cat("\014")
+```
+
