@@ -121,3 +121,18 @@ fun_leer_archivos <- function(carpeta_datos){
 }
 ```
 
+Extraemos de la lista todos los dataframes y los cargamos en el *Enviroment.*
+
+Limpiamos todo el el entrono y nos quedamos únicamente con los datos que nos itersan.
+
+```{r warning =FALSE, error = FALSE, message = FALSE, results = "hide"}
+# Obtenmeos los dataframe en el Environment
+for (i in names(lista_de_tablas)) {
+  assign(paste0("df_", i), lista_de_tablas[[i]])
+}
+
+# Limpiar entorno
+no_limpiar <- c(paste0("df_", nombre_tablas),'lista_de_tablas', 'fun_na_df', 'fun_na_lista')
+rm(list = setdiff(ls(), no_limpiar));graphics.off();globalenv();cat("\014")
+```
+
