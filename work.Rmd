@@ -1,1 +1,48 @@
+---
+title:    "**Trabajo Final**"
+subtitle: "**Programación en R**"
+author:   "**por [Aaron Pérez](https://www.linkedin.com/in/aaronbp/)**"
+mail:     "aaronbenchiheubperez@gmail.com"
+linkedin: "aaronbp"
+twitter:  "bp_aaron"
+github:   "AaronBenchi"
+date:     "**`r Sys.Date()`**"
+#logo:     ""
+license:  by-nc-sa
+urlcolor: blue
+css: mi_diseño/mi_styles.css
+output:
+  html_document: 
+    theme:        cosmo # "default", "cerulean", "journal", "flatly", "readable", "spacelab", "united", "cosmo", "lumen", "paper", "sandstone", "simplex", "yeti"
+    highlight:    tango # "default", "tango", "pygments", "kate", "monochrome", "espresso", "zenburn", "haddock", "textmate"
+    toc:          true
+    toc_float:    true
+    code_folding: show
+    includes:
+      after_body: mi_diseño/footer.html
+  word_document:  default
+  epuRate::epurate:
+    toc:             TRUE
+    number_sections: FALSE
+    code_folding:    "show"
+  pdf_document:   default
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      warning =FALSE, 
+                      error = FALSE,
+                      message = FALSE,
+                      fig.align = "center", 
+                      out.width = "100%")
+```
+
+```{r, include=FALSE}
+# Para obligar a que salgan los iconos en documentos Rmarkdown
+htmltools::tagList(rmarkdown::html_dependency_font_awesome())
+```
+
+![](mi_disen%CC%83o/Logo_AA.png){style="position:absolute;top:0px;right:0px;" width="108"}
 
